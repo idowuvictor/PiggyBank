@@ -1,0 +1,15 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Node modules
+node_modules/
+
+# Mac OS
+.DS_Store
+
+# Foundry
+broadcast/
+cache/
+out/
