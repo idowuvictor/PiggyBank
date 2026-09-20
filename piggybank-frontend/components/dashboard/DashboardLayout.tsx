@@ -1,0 +1,51 @@
+'use client'
+
+import { usePiggyBank } from '../../hooks/usePiggyBank'
+import { Wallet, LoaderCircle } from 'lucide-react'
+import Link from 'next/link'
+import { ReactNode } from 'react'
+import HeroVideoBackground from '../HeroVideoBackground'
+
+const HAND_VIDEO_URL = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260511_230229_7c9bc431-46cf-489a-948d-e8144d8eb5d4.mp4'
+
+export function DashboardLayout({ children }: { children: ReactNode }) {
+  const { account, connect, canUseWallet } = usePiggyBank()
+
+  const shorten = (str: string) => `${str.slice(0, 6)}...${str.slice(-4)}`
+
+  return (
+    <main className="min-h-screen bg-[#0b0e0d] text-[#f2f3ed] font-sans relative overflow-hidden">
+      <HeroVideoBackground videoUrl={HAND_VIDEO_URL} />
+
+      {/* Background Glow */}
+      <div className="absolute w-[520px] h-[520px] rounded-full bg-[#b4ff7620] blur-[100px] -right-[180px] -top-[230px] pointer-events-none" />
+      
+      {/* Navigation */}
+      <header className="h-[82px] flex items-center gap-7 max-w-[1180px] mx-auto px-8 border-b border-white/5 relative z-10">
+        <Link href="/" className="text-[22px] font-extrabold tracking-tight text-[#f2f3ed] no-underline">
+          Piggy<span className="text-[#c5f36b]">Bank</span>
+        </Link>
+        <nav className="hidden md:flex gap-5 ml-5" aria-label="Primary navigation">
+          <Link href="/" className="text-[#94a39a] hover:text-[#f2f3ed] text-[13px] no-underline transition-colors">Home</Link>
+          <Link href="/dashboard" className="text-[#f2f3ed] text-[13px] no-underline">Dashboard</Link>
+        </nav>
+        <div className="hidden md:flex font-mono text-[12px] text-[#94a39a] border border-[#26312b] px-3 py-2 rounded-full items-center gap-2">
+          <i className="w-[7px] h-[7px] rounded-full bg-[#c5f36b] shadow-[0_0_10px_#c5f36b]" /> 
+          Electroneum Testnet
+        </div>
+        <button 
+          onClick={connect} 
+          className="ml-auto bg-[#c5f36b] text-[#111810] px-4 py-2.5 rounded-full font-bold inline-flex gap-2 items-center hover:bg-[#d8ff8a] transition-colors"
+        >
+          <Wallet size={15} />
+          {account ? shorten(account) : 'Connect wallet'}
+        </button>
+      </header>
+
+      {/* Main Content */}
+      <div className="max-w-[1180px] mx-auto px-8 pt-6 pb-20 relative z-10">
+        {children}
+      </div>
+    </main>
+  )
+}
