@@ -1,41 +1,74 @@
+import { Pool } from 'pg'
 import sqlite3 from 'sqlite3'
-import { promisify } from 'util'
 import path from 'path'
 import fs from 'fs'
+import dotenv from 'dotenv'
+dotenv.config()
 
-const DB_DIR = path.join(__dirname, '../data')
-if (!fs.existsSync(DB_DIR)) {
-  fs.mkdirSync(DB_DIR)
+const usePostgres = !!process.env.DATABASE_URL
+
+let pgPool: Pool | null = null
+let sqliteDb: sqlite3.Database | null = null
+
+if (usePostgres) {
+  pgPool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+  })
+} else {
+  const DB_DIR = path.join(__dirname, '../data')
+  if (!fs.existsSync(DB_DIR)) {
+    fs.mkdirSync(DB_DIR)
+  }
+  sqliteDb = new sqlite3.Database(path.join(DB_DIR, 'piggybank.sqlite'))
 }
 
-const dbPath = path.join(DB_DIR, 'piggybank.sqlite')
-const db = new sqlite3.Database(dbPath)
-
-export function run(sql: string, params: any[] = []): Promise<void> {
-  return new Promise((resolve, reject) => {
-    db.run(sql, params, (err) => {
-      if (err) reject(err)
-      else resolve()
-    })
-  })
+// Convert `?` to `$1, $2` for Postgres
+function convertSql(sql: string): string {
+  if (!usePostgres) return sql
+  let i = 1
+  return sql.replace(/\?/g, () => '$' + (i++))
 }
 
-export function get(sql: string, params: any[] = []): Promise<any> {
-  return new Promise((resolve, reject) => {
-    db.get(sql, params, (err, row) => {
-      if (err) reject(err)
-      else resolve(row)
+export async function run(sql: string, params: any[] = []): Promise<void> {
+  if (usePostgres) {
+    await pgPool!.query(convertSql(sql), params)
+  } else {
+    return new Promise((resolve, reject) => {
+      sqliteDb!.run(sql, params, (err) => {
+        if (err) reject(err)
+        else resolve()
+      })
     })
-  })
+  }
 }
 
-export function all(sql: string, params: any[] = []): Promise<any[]> {
-  return new Promise((resolve, reject) => {
-    db.all(sql, params, (err, rows) => {
-      if (err) reject(err)
-      else resolve(rows)
+export async function get(sql: string, params: any[] = []): Promise<any> {
+  if (usePostgres) {
+    const res = await pgPool!.query(convertSql(sql), params)
+    return res.rows[0] || null
+  } else {
+    return new Promise((resolve, reject) => {
+      sqliteDb!.get(sql, params, (err, row) => {
+        if (err) reject(err)
+        else resolve(row)
+      })
     })
-  })
+  }
+}
+
+export async function all(sql: string, params: any[] = []): Promise<any[]> {
+  if (usePostgres) {
+    const res = await pgPool!.query(convertSql(sql), params)
+    return res.rows
+  } else {
+    return new Promise((resolve, reject) => {
+      sqliteDb!.all(sql, params, (err, rows) => {
+        if (err) reject(err)
+        else resolve(rows)
+      })
+    })
+  }
 }
 
 export async function initDb() {
@@ -59,17 +92,19 @@ export async function initDb() {
       current_round_index INTEGER NOT NULL DEFAULT 0,
       amount_saved TEXT NOT NULL DEFAULT '0',
       fees_paid TEXT NOT NULL DEFAULT '0',
-      status TEXT NOT NULL DEFAULT 'Active', -- 'Active', 'Completed', 'Closed'
+      status TEXT NOT NULL DEFAULT 'Active',
       created_at_block INTEGER NOT NULL,
       created_at_time INTEGER NOT NULL
     )
   `)
 
+  const idCol = usePostgres ? 'id SERIAL PRIMARY KEY' : 'id INTEGER PRIMARY KEY AUTOINCREMENT'
+
   await run(`
     CREATE TABLE IF NOT EXISTS events (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      ${idCol},
       plan_id TEXT NOT NULL,
-      event_type TEXT NOT NULL, -- 'RoundPaid', 'CatchUpExecuted', 'EmergencyWithdrawn', 'PlanCompleted'
+      event_type TEXT NOT NULL,
       amount TEXT NOT NULL DEFAULT '0',
       fee TEXT NOT NULL DEFAULT '0',
       round_index INTEGER,
@@ -83,11 +118,12 @@ export async function initDb() {
   // Initialize sync state if empty
   const state = await get(`SELECT last_synced_block FROM sync_state WHERE id = 1`)
   if (!state) {
-    // Insert initial state starting from the new contract deployment block
-    await run(`INSERT OR IGNORE INTO sync_state (id, last_synced_block) VALUES (1, 15356719)`)
+    const insertSql = usePostgres 
+      ? `INSERT INTO sync_state (id, last_synced_block) VALUES (1, 15356719) ON CONFLICT DO NOTHING`
+      : `INSERT OR IGNORE INTO sync_state (id, last_synced_block) VALUES (1, 15356719)`
+    await run(insertSql)
   }
 
-  console.log('Database initialized at', dbPath)
+  console.log('Database initialized! Mode:', usePostgres ? 'PostgreSQL' : 'SQLite')
 }
 
-export { db }
