@@ -10,7 +10,7 @@ import HeroVideoBackground from '../HeroVideoBackground'
 const HAND_VIDEO_URL = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260511_230229_7c9bc431-46cf-489a-948d-e8144d8eb5d4.mp4'
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
-  const { account, connect, canUseWallet } = usePiggyBank()
+  const { account, connect, canUseWallet, mintTestTokens, busy } = usePiggyBank()
 
   const shorten = (str: string) => `${str.slice(0, 6)}...${str.slice(-4)}`
 
@@ -35,13 +35,24 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
           <i className="w-[7px] h-[7px] rounded-full bg-[#c5f36b] shadow-[0_0_10px_#c5f36b]" /> 
           Electroneum Testnet
         </div>
-        <button 
-          onClick={connect} 
-          className="ml-auto bg-[#c5f36b] text-[#111810] px-4 py-2.5 rounded-full font-bold inline-flex gap-2 items-center hover:bg-[#d8ff8a] transition-colors"
-        >
-          <Wallet size={15} />
-          {account ? shorten(account) : 'Connect wallet'}
-        </button>
+        <div className="ml-auto flex items-center gap-3">
+          {account && (
+            <button 
+              onClick={mintTestTokens}
+              disabled={busy}
+              className="bg-[#1a241e] border border-[#26312b] text-[#c5f36b] px-4 py-2.5 rounded-full font-bold inline-flex items-center gap-2 hover:bg-[#26312b] transition-colors disabled:opacity-50"
+            >
+              Faucet 1k USDC
+            </button>
+          )}
+          <button 
+            onClick={connect} 
+            className="bg-[#c5f36b] text-[#111810] px-4 py-2.5 rounded-full font-bold inline-flex gap-2 items-center hover:bg-[#d8ff8a] transition-colors"
+          >
+            <Wallet size={15} />
+            {account ? shorten(account) : 'Connect wallet'}
+          </button>
+        </div>
       </header>
 
       {/* Main Content */}
