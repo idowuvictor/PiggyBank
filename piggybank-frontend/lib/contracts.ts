@@ -23,6 +23,19 @@ export const piggyAbi = [
   'function claimCompletion(uint256 planId)',
   'function emergencyWithdraw(uint256 planId)',
   
+  // Admin Read
+  'function owner() view returns (address)',
+  'function treasury() view returns (address)',
+  'function defaultEmergencyFeeBps() view returns (uint256)',
+  'function keeperIncentiveBps() view returns (uint256)',
+  'function acceptedTokens(address token) view returns (bool)',
+
+  // Admin Write
+  'function setDefaultEmergencyFeeBps(uint256 newBps)',
+  'function setKeeperIncentiveBps(uint256 newBps)',
+  'function setTreasuryAddress(address newTreasury)',
+  'function setAcceptedToken(address token, bool accepted)',
+  
   // Events
   'event PlanCreated(uint256 indexed planId, address indexed owner, uint256 goal, uint8 cadence, uint256 roundAmount, uint256 totalRounds)',
   'event RoundPaid(uint256 indexed planId, uint256 indexed roundIndex, uint256 amount, uint256 fee)',
