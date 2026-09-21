@@ -3,8 +3,8 @@ import Image from 'next/image'
 import { ArrowRight, ShieldCheck, Timer, WalletCards } from 'lucide-react'
 import HeroVideoBackground from '../components/HeroVideoBackground'
 
-const PIGGYBANK = '0x8d09d183A2d0D5a9cC91172a8568e0A1C27314ce'
-const USDC = '0xF2837cD516f35686cBfD91B8A523abE6216DdE52'
+const PIGGYBANK = '0xb87288B44F3fCAb62f37cEDe98A98Ab52352e545'
+const USDC = '0xB7542a0ecDCBFEb1995921058A0F49A0B7A3FEA3'
 const UNIVERSE_VIDEO_URL = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260912_104036_bd6924f6-3c8e-417e-8465-6d03c8c2e9e6.mp4'
 
 export default function HomePage() {
@@ -16,7 +16,7 @@ export default function HomePage() {
       />
       <header className="piggy-nav relative z-10">
         <Link href="/" className="flex items-center">
-          <Image src="/piggy-logo.jpeg" alt="PiggyBank Logo" width={160} height={40} className="h-10 w-auto rounded-md object-contain" priority />
+          <Image src="/piggy-new.png" alt="PiggyBank Logo" width={160} height={40} className="h-10 w-auto rounded-md object-contain" priority />
         </Link>
         <nav className="site-nav" aria-label="Primary navigation">
           <Link className="active" href="/">Home</Link>

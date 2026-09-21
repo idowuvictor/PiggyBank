@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const RPC_URL = process.env.RPC_URL || 'https://rpc.ankr.com/electroneum_testnet'
-const PIGGYBANK_ADDRESS = process.env.PIGGYBANK_ADDRESS || '0x8d09d183A2d0D5a9cC91172a8568e0A1C27314ce'
+const PIGGYBANK_ADDRESS = process.env.PIGGYBANK_ADDRESS || '0xb87288B44F3fCAb62f37cEDe98A98Ab52352e545'
 const KEEPER_PRIVATE_KEY = process.env.KEEPER_PRIVATE_KEY
 
 if (!KEEPER_PRIVATE_KEY) {
