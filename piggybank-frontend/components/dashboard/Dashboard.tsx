@@ -39,10 +39,20 @@ export function Dashboard() {
     setBusy(true)
     setStatus('Submitting payment...')
     try {
-      const { BrowserProvider, Contract } = await import('ethers')
-      const { piggyAbi, PIGGYBANK_ADDRESS } = await import('../../lib/contracts')
+      const { BrowserProvider, Contract, parseUnits } from 'ethers'
+      const { piggyAbi, tokenAbi, PIGGYBANK_ADDRESS, USDC_ADDRESS } = await import('../../lib/contracts')
       const provider = new BrowserProvider(window.ethereum)
       const signer = await provider.getSigner()
+      const address = await signer.getAddress()
+      
+      const tokenContract = new Contract(USDC_ADDRESS, tokenAbi, signer)
+      const balance = await tokenContract.balanceOf(address)
+      const requiredAmount = parseUnits(selectedPlan.roundAmount.toString(), 6)
+      
+      if (balance < requiredAmount) {
+        throw new Error('Insufficient USDC balance to complete this payment.')
+      }
+
       const piggy = new Contract(PIGGYBANK_ADDRESS, piggyAbi, signer)
       const tx = await piggy.deduct(Number(selectedPlan.id))
       await tx.wait()
