@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { BrowserProvider, Contract } from 'ethers'
-import { CHAIN_ID, EXPLORER_URL, PIGGYBANK_ADDRESS, piggyAbi, RPC_URL, USDC_ADDRESS } from '../lib/contracts'
+import { BrowserProvider, Contract, formatUnits } from 'ethers'
+import { CHAIN_ID, EXPLORER_URL, PIGGYBANK_ADDRESS, piggyAbi, RPC_URL, USDC_ADDRESS, tokenAbi } from '../lib/contracts'
 
 export type AdminStats = {
   totalPlans: number
@@ -113,7 +113,22 @@ export function useAdmin() {
         const res = await fetch(`http://localhost:3001/api/admin/stats`)
         if (res.ok) {
           const data = await res.json()
-          setStats(data)
+          
+          const token = new Contract(USDC_ADDRESS, tokenAbi, provider)
+          const decimals = await token.decimals()
+          const decs = Number(decimals)
+          
+          setStats({
+            ...data,
+            totalSaved: formatUnits(data.totalSaved || '0', decs),
+            totalFees: formatUnits(data.totalFees || '0', decs),
+            totalTargetGoals: formatUnits(data.totalTargetGoals || '0', decs),
+            recentPlans: (data.recentPlans || []).map((p: any) => ({
+              ...p,
+              goal: formatUnits(p.goal || '0', decs),
+              amountSaved: formatUnits(p.amountSaved || '0', decs)
+            }))
+          })
         }
       } else {
         setStatus('Access denied. You are not the contract owner.')

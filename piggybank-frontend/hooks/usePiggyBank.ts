@@ -156,7 +156,14 @@ export function usePiggyBank() {
       const res = await fetch(`http://localhost:3001/api/plans/${address}`)
       if (res.ok) {
         const data = await res.json()
-        setPlans(data.plans || [])
+        const formattedPlans = (data.plans || []).map((p: any) => ({
+          ...p,
+          goal: formatUnits(p.goal || '0', decs),
+          roundAmount: formatUnits(p.roundAmount || '0', decs),
+          amountSaved: formatUnits(p.amountSaved || '0', decs),
+          feesPaid: formatUnits(p.feesPaid || '0', decs)
+        }))
+        setPlans(formattedPlans)
         setStatus((data.plans && data.plans.length) ? `Wallet connected. Found ${data.plans.length} plans.` : 'Wallet connected. No plans found.')
       } else {
         throw new Error('Failed to fetch from indexer API')
