@@ -40,24 +40,19 @@ export function PlanDetails({ plan, busy, onDeduct, onClaim, onEmergencyWithdraw
     async function fetchEvents() {
       setLoadingEvents(true)
       try {
-        const provider = new BrowserProvider(window.ethereum as any)
-        const piggy = new Contract(PIGGYBANK_ADDRESS, piggyAbi, provider)
-        const filter = piggy.filters.RoundPaid(BigInt(plan!.id))
-        const logs = await piggy.queryFilter(filter, -10000) // last 10000 blocks
-        
-        // Wait, we need the token decimals, but since they're in Plan we can't easily get it here unless passed in.
-        // I'll just format manually or assume 18 for now based on what we saw, but wait, use formatUnits with 18.
-        const parsedEvents = logs.map(log => {
-          const parsed = piggy.interface.parseLog(log as any)
-          return {
-            roundIndex: Number(parsed?.args[1] || 0),
-            amount: formatUnits(parsed?.args[2] || 0, 18),
-            fee: formatUnits(parsed?.args[3] || 0, 18),
-            txHash: log.transactionHash
-          }
-        }).reverse() // newest first
-
-        setEvents(parsedEvents)
+        const res = await fetch(`http://localhost:3001/api/plan/${plan!.id}`)
+        if (res.ok) {
+          const data = await res.json()
+          const parsedEvents = (data.events || [])
+            .filter((evt: any) => evt.event_type === 'RoundPaid')
+            .map((evt: any) => ({
+              roundIndex: evt.round_index,
+              amount: formatUnits(evt.amount || 0, 18),
+              fee: formatUnits(evt.fee || 0, 18),
+              txHash: evt.tx_hash
+            }))
+          setEvents(parsedEvents)
+        }
       } catch (err) {
         console.error("Failed to fetch events:", err)
       } finally {
