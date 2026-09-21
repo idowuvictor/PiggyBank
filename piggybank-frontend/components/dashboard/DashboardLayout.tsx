@@ -22,8 +22,7 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
       {/* Background Glow */}
       <div className="absolute w-[520px] h-[520px] rounded-full bg-[#b4ff7620] blur-[100px] -right-[180px] -top-[230px] pointer-events-none" />
       
-      {/* Navigation */}
-      <header className="h-[82px] flex items-center gap-7 max-w-[1180px] mx-auto px-8 border-b border-white/5 relative z-10">
+      <header className="h-[82px] flex items-center gap-7 max-w-[1180px] mx-auto px-8 border-b border-white/5 relative z-50">
         <Link href="/" className="flex items-center">
           <Image src="/piggy-new.png" alt="PiggyBank Logo" width={160} height={40} className="h-10 w-auto rounded-md object-contain" priority />
         </Link>
