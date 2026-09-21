@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight, ShieldCheck, Timer, WalletCards } from 'lucide-react'
 import HeroVideoBackground from '../components/HeroVideoBackground'
 
@@ -14,7 +15,10 @@ export default function HomePage() {
         cssFilter="hue-rotate(150deg) sepia(0.2) saturate(1.2) brightness(0.85)" 
       />
       <header className="piggy-nav relative z-10">
-        <Link className="piggy-logo" href="/">Piggy<span>Bank</span></Link>
+        <Link className="piggy-logo flex items-center gap-2" href="/">
+          <Image src="/piggy-logo.jpeg" alt="PiggyBank Logo" width={32} height={32} className="rounded-lg" />
+          <div>Piggy<span>Bank</span></div>
+        </Link>
         <nav className="site-nav" aria-label="Primary navigation">
           <Link className="active" href="/">Home</Link>
           <Link href="/dashboard">Dashboard</Link>

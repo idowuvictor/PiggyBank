@@ -3,6 +3,7 @@
 import { usePiggyBank } from '../../hooks/usePiggyBank'
 import { Wallet, LoaderCircle } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ReactNode } from 'react'
 import HeroVideoBackground from '../HeroVideoBackground'
 
@@ -22,8 +23,9 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
       
       {/* Navigation */}
       <header className="h-[82px] flex items-center gap-7 max-w-[1180px] mx-auto px-8 border-b border-white/5 relative z-10">
-        <Link href="/" className="text-[22px] font-extrabold tracking-tight text-[#f2f3ed] no-underline">
-          Piggy<span className="text-[#c5f36b]">Bank</span>
+        <Link href="/" className="flex items-center gap-2 text-[22px] font-extrabold tracking-tight text-[#f2f3ed] no-underline">
+          <Image src="/piggy-logo.jpeg" alt="PiggyBank Logo" width={32} height={32} className="rounded-lg" />
+          <div>Piggy<span className="text-[#c5f36b]">Bank</span></div>
         </Link>
         <nav className="hidden md:flex gap-5 ml-5" aria-label="Primary navigation">
           <Link href="/" className="text-[#94a39a] hover:text-[#f2f3ed] text-[13px] no-underline transition-colors">Home</Link>
