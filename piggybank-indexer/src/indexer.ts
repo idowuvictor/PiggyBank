@@ -1,5 +1,5 @@
 import { JsonRpcProvider, Contract, EventLog, Interface } from 'ethers'
-import { db, run, get } from './db'
+import { run, get } from './db'
 import dotenv from 'dotenv'
 
 dotenv.config()
