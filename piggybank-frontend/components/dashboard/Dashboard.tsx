@@ -39,7 +39,7 @@ export function Dashboard() {
     setBusy(true)
     setStatus('Submitting payment...')
     try {
-      const { BrowserProvider, Contract, parseUnits } from 'ethers'
+      const { BrowserProvider, Contract, parseUnits } = await import('ethers')
       const { piggyAbi, tokenAbi, PIGGYBANK_ADDRESS, USDC_ADDRESS } = await import('../../lib/contracts')
       const provider = new BrowserProvider(window.ethereum)
       const signer = await provider.getSigner()
