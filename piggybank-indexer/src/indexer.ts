@@ -5,13 +5,13 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const RPC_URL = process.env.RPC_URL || 'https://rpc.ankr.com/electroneum_testnet'
-const PIGGYBANK_ADDRESS = process.env.PIGGYBANK_ADDRESS || '0xb87288B44F3fCAb62f37cEDe98A98Ab52352e545'
+const PIGGYBANK_ADDRESS = process.env.PIGGYBANK_ADDRESS || '0xe3665FbFf485aF993Fa03fae2CCD583b6F770C6d'
 const SYNC_INTERVAL_MS = 10000 // 10 seconds polling
 
 const abi = [
-  'event PlanCreated(uint256 indexed planId, address indexed owner, uint256 goal, uint8 cadence, uint256 roundAmount, uint256 totalRounds)',
-  'event RoundPaid(uint256 indexed planId, uint256 indexed roundIndex, uint256 amount, uint256 fee)',
-  'event CatchUpExecuted(uint256 indexed planId, uint256 roundsRecovered, uint256 totalFeesCharged)',
+  'event PlanCreated(uint256 indexed planId, address indexed owner, address indexed token, string title, uint256 goal, uint8 cadence, uint256 roundAmount, uint256 lastRoundAmount, uint256 totalRounds, uint256 emergencyFeeBps, uint256 requiredApproval)',
+  'event RoundPaid(uint256 indexed planId, uint256 indexed roundIndex, uint256 amountPaid, uint256 feeCharged, bool wasMissed)',
+  'event CatchUpExecuted(uint256 indexed planId, uint256 roundsRecovered, uint256 totalFeesCharged, address indexed keeper)',
   'event PlanCompleted(uint256 indexed planId, address indexed owner, uint256 totalSaved)',
   'event EmergencyWithdrawn(uint256 indexed planId, address indexed owner, uint256 amountReturned, uint256 feeCharged)'
 ]
@@ -56,7 +56,7 @@ async function processEvent(log: EventLog) {
   if (eventName === 'PlanCreated') {
     const [planId, owner, tokenArg, title, goal, cadence, roundAmount, lastRoundAmount, totalRounds] = args
     const interval = cadence === 0n ? 86400 : cadence === 1n ? 604800 : 2592000
-    const token = '0xB7542a0ecDCBFEb1995921058A0F49A0B7A3FEA3' // Hardcoding USDC for now
+    const token = tokenArg.toLowerCase()
     
     // Check if exists
     const existing = await get(`SELECT plan_id FROM plans WHERE plan_id = ?`, [planId.toString()])

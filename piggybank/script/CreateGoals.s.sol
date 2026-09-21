@@ -11,8 +11,8 @@ contract CreateGoals is Script {
         address deployer = vm.addr(deployerKey);
 
         // TODO: Update these addresses once deployment finishes
-        address piggyBankAddr = 0xb87288B44F3fCAb62f37cEDe98A98Ab52352e545;
-        address mockUSDCAddr = 0xB7542a0ecDCBFEb1995921058A0F49A0B7A3FEA3;
+        address piggyBankAddr = 0xe3665FbFf485aF993Fa03fae2CCD583b6F770C6d;
+        address mockUSDCAddr = 0xe998234aa8a6743d00b738B6cbbE7DB63C60eFb2;
 
         PiggyBank piggyBank = PiggyBank(piggyBankAddr);
         MockERC20 mockUSDC = MockERC20(mockUSDCAddr);

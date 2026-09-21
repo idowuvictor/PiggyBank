@@ -1,5 +1,5 @@
-export const PIGGYBANK_ADDRESS = '0xb87288B44F3fCAb62f37cEDe98A98Ab52352e545'
-export const USDC_ADDRESS = '0xB7542a0ecDCBFEb1995921058A0F49A0B7A3FEA3'
+export const PIGGYBANK_ADDRESS = '0xe3665FbFf485aF993Fa03fae2CCD583b6F770C6d'
+export const USDC_ADDRESS = '0xe998234aa8a6743d00b738B6cbbE7DB63C60eFb2'
 export const CHAIN_ID = 5201420
 export const RPC_URL = 'https://rpc.ankr.com/electroneum_testnet'
 export const EXPLORER_URL = 'https://blockexplorer.testnet.electroneum.com'
