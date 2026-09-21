@@ -1,5 +1,4 @@
 import { Pool } from 'pg'
-import sqlite3 from 'sqlite3'
 import path from 'path'
 import fs from 'fs'
 import dotenv from 'dotenv'
@@ -8,7 +7,7 @@ dotenv.config()
 const usePostgres = !!process.env.DATABASE_URL
 
 let pgPool: Pool | null = null
-let sqliteDb: sqlite3.Database | null = null
+let sqliteDb: any = null
 
 if (usePostgres) {
   pgPool = new Pool({
@@ -16,6 +15,7 @@ if (usePostgres) {
     ssl: { rejectUnauthorized: false }
   })
 } else {
+  const sqlite3 = require('sqlite3')
   const DB_DIR = path.join(__dirname, '../data')
   if (!fs.existsSync(DB_DIR)) {
     fs.mkdirSync(DB_DIR)
