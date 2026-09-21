@@ -13,3 +13,8 @@ node_modules/
 broadcast/
 cache/
 out/
+.vercel/
+
+# Indexer
+piggybank-indexer/data/
+*.sqlite
