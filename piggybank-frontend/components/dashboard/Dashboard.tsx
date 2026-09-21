@@ -174,7 +174,11 @@ export function Dashboard() {
         />
       </div>
 
-      <div className="mt-6 text-center text-sm text-[#94a39a] bg-[#111714cc] border border-[#26312b] py-3 rounded-xl">
+      <div className={`mt-6 text-center text-sm border py-3 rounded-xl ${
+        status.toLowerCase().includes('fail') || status.toLowerCase().includes('insufficient') || status.toLowerCase().includes('cancel')
+          ? 'text-red-400 border-red-500/30 bg-red-500/10'
+          : 'text-[#94a39a] border-[#26312b] bg-[#111714cc]'
+      }`}>
         Status: {status}
       </div>
 

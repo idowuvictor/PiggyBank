@@ -48,7 +48,13 @@ export default function AdminDashboard() {
             <ShieldCheck className="w-6 h-6 text-[#c5f36b]" />
             Admin Dashboard
           </h1>
-          <p className="text-sm text-[#94a39a] mt-1">{status}</p>
+          <p className={`text-sm mt-1 ${
+            status.toLowerCase().includes('fail') || status.toLowerCase().includes('denied') || status.toLowerCase().includes('cancel') 
+              ? 'text-red-400' 
+              : 'text-[#94a39a]'
+          }`}>
+            {status}
+          </p>
         </div>
       </div>
 
