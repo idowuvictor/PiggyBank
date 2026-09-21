@@ -7,6 +7,7 @@ import { CHAIN_ID, EXPLORER_URL, PIGGYBANK_ADDRESS, piggyAbi, RPC_URL, tokenAbi,
 export type Plan = {
   id: string
   owner: string
+  title: string
   goal: string
   totalRounds: number
   roundAmount: string
@@ -174,6 +175,26 @@ export function usePiggyBank() {
     setBusy(false)
   }
 
+  async function mintTestTokens() {
+    if (!account || !window.ethereum) return
+    setBusy(true)
+    try {
+      const provider = new BrowserProvider(window.ethereum)
+      const signer = await provider.getSigner()
+      const token = new Contract(USDC_ADDRESS, tokenAbi, signer)
+      // Mint 1000 USDC
+      const tx = await token.mint(account, parseUnits('1000', decimals))
+      await tx.wait()
+      await refresh()
+      setStatus('Minted 1,000 Test USDC!')
+    } catch (e: any) {
+      console.error(e)
+      setStatus(e.message || 'Failed to mint test tokens')
+    } finally {
+      setBusy(false)
+    }
+  }
+
   return {
     account,
     balances,
@@ -185,6 +206,7 @@ export function usePiggyBank() {
     setStatus,
     connect,
     refresh,
+    mintTestTokens,
     canUseWallet
   }
 }

@@ -8,7 +8,8 @@ export const tokenAbi = [
   'function approve(address spender, uint256 amount) returns (bool)',
   'function allowance(address owner, address spender) view returns (uint256)',
   'function balanceOf(address owner) view returns (uint256)',
-  'function decimals() view returns (uint8)'
+  'function decimals() view returns (uint8)',
+  'function mint(address to, uint256 amount)'
 ]
 
 export const piggyAbi = [
@@ -17,8 +18,15 @@ export const piggyAbi = [
   'function getUserPlanIds(address user) view returns (uint256[])',
   'function computeRequiredApproval(uint256 goal) view returns (uint256)',
   
-  // Write
-  'function createPlan(address token, uint256 goal, uint8 cadence) returns (uint256 planId)',
+  // Events
+  'event PlanCreated(uint256 indexed planId, address indexed owner, address indexed token, string title, uint256 goal, uint8 cadence, uint256 roundAmount, uint256 lastRoundAmount, uint256 totalRounds, uint256 emergencyFeeBps, uint256 requiredApproval)',
+  'event RoundPaid(uint256 indexed planId, uint256 indexed roundIndex, uint256 amountPaid, uint256 feeCharged, bool wasMissed)',
+  'event CatchUpExecuted(uint256 indexed planId, uint256 roundsRecovered, uint256 totalFeesCharged, address indexed keeper)',
+  'event PlanCompleted(uint256 indexed planId, address indexed owner, uint256 totalSaved)',
+  'event EmergencyWithdrawn(uint256 indexed planId, address indexed owner, uint256 amountReturned, uint256 feeCharged)',
+  
+  // Write functions
+  'function createPlan(address token, uint256 goal, uint8 cadence, string calldata title) returns (uint256 planId)',
   'function deduct(uint256 planId)',
   'function claimCompletion(uint256 planId)',
   'function emergencyWithdraw(uint256 planId)',
