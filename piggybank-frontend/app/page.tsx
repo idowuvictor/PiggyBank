@@ -15,9 +15,8 @@ export default function HomePage() {
         cssFilter="hue-rotate(150deg) sepia(0.2) saturate(1.2) brightness(0.85)" 
       />
       <header className="piggy-nav relative z-10">
-        <Link className="piggy-logo flex items-center gap-2" href="/">
-          <Image src="/piggy-logo.jpeg" alt="PiggyBank Logo" width={32} height={32} className="rounded-lg" />
-          <div>Piggy<span>Bank</span></div>
+        <Link href="/" className="flex items-center">
+          <Image src="/piggy-logo.jpeg" alt="PiggyBank Logo" width={160} height={40} className="h-10 w-auto rounded-md object-contain" priority />
         </Link>
         <nav className="site-nav" aria-label="Primary navigation">
           <Link className="active" href="/">Home</Link>
