@@ -33,23 +33,23 @@ export function usePiggyBank() {
 
   useEffect(() => {
     if (canUseWallet) {
-      if (localStorage.getItem('piggybank_disconnected') === 'true') return
-      
       // Check if already connected
-      window.ethereum.request({ method: 'eth_accounts' }).then(async (accounts: string[]) => {
-        if (accounts.length > 0) {
-          try {
-            const provider = new BrowserProvider(window.ethereum)
-            const network = await provider.getNetwork()
-            if (Number(network.chainId) === CHAIN_ID) {
-              setAccount(accounts[0])
-              await loadWalletData(provider, accounts[0])
+      if (localStorage.getItem('piggybank_disconnected') !== 'true') {
+        window.ethereum.request({ method: 'eth_accounts' }).then(async (accounts: string[]) => {
+          if (accounts.length > 0) {
+            try {
+              const provider = new BrowserProvider(window.ethereum)
+              const network = await provider.getNetwork()
+              if (Number(network.chainId) === CHAIN_ID) {
+                setAccount(accounts[0])
+                await loadWalletData(provider, accounts[0])
+              }
+            } catch (e) {
+              console.error(e)
             }
-          } catch (e) {
-            console.error(e)
           }
-        }
-      }).catch(console.error)
+        }).catch(console.error)
+      }
 
       // Listen for account/chain changes
       const handleAccountsChanged = (accounts: string[]) => {
@@ -69,14 +69,33 @@ export function usePiggyBank() {
         window.location.reload()
       }
 
+      const handleCustomConnect = () => {
+        window.ethereum.request({ method: 'eth_accounts' }).then(async (accounts: string[]) => {
+          if (accounts.length > 0) {
+            try {
+              const provider = new BrowserProvider(window.ethereum)
+              const network = await provider.getNetwork()
+              if (Number(network.chainId) === CHAIN_ID) {
+                setAccount(accounts[0])
+                await loadWalletData(provider, accounts[0])
+              }
+            } catch (e) {
+              console.error(e)
+            }
+          }
+        }).catch(console.error)
+      }
+
       window.ethereum.on('accountsChanged', handleAccountsChanged)
       window.ethereum.on('chainChanged', handleChainChanged)
+      window.addEventListener('piggybank_connect', handleCustomConnect)
 
       return () => {
         if (window.ethereum.removeListener) {
           window.ethereum.removeListener('accountsChanged', handleAccountsChanged)
           window.ethereum.removeListener('chainChanged', handleChainChanged)
         }
+        window.removeEventListener('piggybank_connect', handleCustomConnect)
       }
     }
   }, [])
@@ -125,6 +144,7 @@ export function usePiggyBank() {
       setAccount(address)
       
       await loadWalletData(provider, address)
+      window.dispatchEvent(new Event('piggybank_connect'))
     } catch (error) {
       setStatus(error instanceof Error ? error.message : 'Could not connect wallet.')
     } finally {

@@ -37,34 +37,33 @@ export function useAdmin() {
     if (canUseWallet) {
       if (localStorage.getItem('piggybank_disconnected') === 'true') {
         setIsInitializing(false)
-        return
-      }
-
-      // Check if already connected
-      window.ethereum.request({ method: 'eth_accounts' }).then(async (accounts: string[]) => {
-        if (accounts.length > 0) {
-          try {
-            const provider = new BrowserProvider(window.ethereum)
-            const network = await provider.getNetwork()
-            if (Number(network.chainId) === CHAIN_ID) {
-              setAccount(accounts[0])
-              await loadAdminData(provider, accounts[0])
-            } else {
-              setStatus('Please connect to the correct network.')
+      } else {
+        // Check if already connected
+        window.ethereum.request({ method: 'eth_accounts' }).then(async (accounts: string[]) => {
+          if (accounts.length > 0) {
+            try {
+              const provider = new BrowserProvider(window.ethereum)
+              const network = await provider.getNetwork()
+              if (Number(network.chainId) === CHAIN_ID) {
+                setAccount(accounts[0])
+                await loadAdminData(provider, accounts[0])
+              } else {
+                setStatus('Please connect to the correct network.')
+              }
+            } catch (e) {
+              console.error(e)
+            } finally {
+              setIsInitializing(false)
             }
-          } catch (e) {
-            console.error(e)
-          } finally {
+          } else {
+            setStatus('Wallet not connected.')
             setIsInitializing(false)
           }
-        } else {
-          setStatus('Wallet not connected.')
+        }).catch((err) => {
+          console.error(err)
           setIsInitializing(false)
-        }
-      }).catch((err) => {
-        console.error(err)
-        setIsInitializing(false)
-      })
+        })
+      }
 
       const handleAccountsChanged = (accounts: string[]) => {
         if (accounts.length > 0) {
@@ -82,14 +81,33 @@ export function useAdmin() {
         window.location.reload()
       }
 
+      const handleCustomConnect = () => {
+        window.ethereum.request({ method: 'eth_accounts' }).then(async (accounts: string[]) => {
+          if (accounts.length > 0) {
+            try {
+              const provider = new BrowserProvider(window.ethereum)
+              const network = await provider.getNetwork()
+              if (Number(network.chainId) === CHAIN_ID) {
+                setAccount(accounts[0])
+                await loadAdminData(provider, accounts[0])
+              }
+            } catch (e) {
+              console.error(e)
+            }
+          }
+        }).catch(console.error)
+      }
+
       window.ethereum.on('accountsChanged', handleAccountsChanged)
       window.ethereum.on('chainChanged', handleChainChanged)
+      window.addEventListener('piggybank_connect', handleCustomConnect)
 
       return () => {
         if (window.ethereum.removeListener) {
           window.ethereum.removeListener('accountsChanged', handleAccountsChanged)
           window.ethereum.removeListener('chainChanged', handleChainChanged)
         }
+        window.removeEventListener('piggybank_connect', handleCustomConnect)
       }
     } else {
       setIsInitializing(false)
@@ -201,6 +219,7 @@ export function useAdmin() {
       setAccount(address)
       
       await loadAdminData(provider, address)
+      window.dispatchEvent(new Event('piggybank_connect'))
     } catch (error) {
       setStatus(error instanceof Error ? error.message : 'Could not connect wallet.')
     } finally {
