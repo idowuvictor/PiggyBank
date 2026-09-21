@@ -6,11 +6,20 @@ import { Activity, Settings, Save, AlertTriangle, ShieldCheck, Wallet } from 'lu
 
 
 export default function AdminDashboard() {
-  const { account, stats, config, status, busy, connect, updateDefaultEmergencyFeeBps, updateKeeperIncentiveBps, updateTreasuryAddress } = useAdmin()
+  const { account, stats, config, status, busy, connect, updateDefaultEmergencyFeeBps, updateKeeperIncentiveBps, updateTreasuryAddress, isInitializing } = useAdmin()
 
   const [emerFee, setEmerFee] = useState('')
   const [keeperFee, setKeeperFee] = useState('')
   const [treasury, setTreasury] = useState('')
+
+  if (isInitializing) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+        <div className="w-8 h-8 border-4 border-[#c5f36b] border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-[#94a39a]">Checking wallet status...</p>
+      </div>
+    )
+  }
 
   if (!account) {
     return (

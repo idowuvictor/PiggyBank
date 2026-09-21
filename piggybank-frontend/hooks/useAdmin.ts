@@ -29,12 +29,16 @@ export function useAdmin() {
   const [config, setConfig] = useState<ContractConfig | null>(null)
   const [status, setStatus] = useState('Checking admin access...')
   const [busy, setBusy] = useState(false)
+  const [isInitializing, setIsInitializing] = useState(true)
 
   const canUseWallet = typeof window !== 'undefined' && Boolean(window.ethereum)
 
   useEffect(() => {
     if (canUseWallet) {
-      if (localStorage.getItem('piggybank_disconnected') === 'true') return
+      if (localStorage.getItem('piggybank_disconnected') === 'true') {
+        setIsInitializing(false)
+        return
+      }
 
       // Check if already connected
       window.ethereum.request({ method: 'eth_accounts' }).then(async (accounts: string[]) => {
@@ -50,11 +54,17 @@ export function useAdmin() {
             }
           } catch (e) {
             console.error(e)
+          } finally {
+            setIsInitializing(false)
           }
         } else {
           setStatus('Wallet not connected.')
+          setIsInitializing(false)
         }
-      }).catch(console.error)
+      }).catch((err) => {
+        console.error(err)
+        setIsInitializing(false)
+      })
 
       const handleAccountsChanged = (accounts: string[]) => {
         if (accounts.length > 0) {
@@ -81,6 +91,8 @@ export function useAdmin() {
           window.ethereum.removeListener('chainChanged', handleChainChanged)
         }
       }
+    } else {
+      setIsInitializing(false)
     }
   }, [])
 
@@ -265,6 +277,7 @@ export function useAdmin() {
     connect,
     updateDefaultEmergencyFeeBps,
     updateKeeperIncentiveBps,
-    updateTreasuryAddress
+    updateTreasuryAddress,
+    isInitializing
   }
 }
