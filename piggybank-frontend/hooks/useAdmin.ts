@@ -110,7 +110,7 @@ export function useAdmin() {
       if (owner.toLowerCase() === address.toLowerCase()) {
         setStatus('Admin access granted.')
         // Fetch stats from indexer if authorized
-        const res = await fetch(`http://localhost:3001/api/admin/stats`)
+        const res = await fetch(`https://piggybank-t2k8.onrender.com/api/admin/stats`)
         if (res.ok) {
           const data = await res.json()
           

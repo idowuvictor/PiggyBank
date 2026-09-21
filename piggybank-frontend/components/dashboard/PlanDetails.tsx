@@ -40,7 +40,7 @@ export function PlanDetails({ plan, busy, onDeduct, onClaim, onEmergencyWithdraw
     async function fetchEvents() {
       setLoadingEvents(true)
       try {
-        const res = await fetch(`http://localhost:3001/api/plan/${plan!.id}`)
+        const res = await fetch(`https://piggybank-t2k8.onrender.com/api/plan/${plan!.id}`)
         if (res.ok) {
           const data = await res.json()
           const parsedEvents = (data.events || [])

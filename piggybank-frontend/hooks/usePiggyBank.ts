@@ -153,7 +153,7 @@ export function usePiggyBank() {
 
       // Load plans
       // Load plans via Backend API
-      const res = await fetch(`http://localhost:3001/api/plans/${address}`)
+      const res = await fetch(`https://piggybank-t2k8.onrender.com/api/plans/${address}`)
       if (res.ok) {
         const data = await res.json()
         const formattedPlans = (data.plans || []).map((p: any) => ({
