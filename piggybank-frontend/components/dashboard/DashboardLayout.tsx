@@ -24,11 +24,12 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
       {/* Navigation */}
       <header className="h-[82px] flex items-center gap-7 max-w-[1180px] mx-auto px-8 border-b border-white/5 relative z-10">
         <Link href="/" className="flex items-center">
-          <Image src="/piggy-logo.jpeg" alt="PiggyBank Logo" width={160} height={40} className="h-10 w-auto rounded-md object-contain" priority />
+          <Image src="/piggy-new.png" alt="PiggyBank Logo" width={160} height={40} className="h-10 w-auto rounded-md object-contain" priority />
         </Link>
         <nav className="hidden md:flex gap-5 ml-5" aria-label="Primary navigation">
           <Link href="/" className="text-[#94a39a] hover:text-[#f2f3ed] text-[13px] no-underline transition-colors">Home</Link>
-          <Link href="/dashboard" className="text-[#f2f3ed] text-[13px] no-underline">Dashboard</Link>
+          <Link href="/dashboard" className="text-[#94a39a] hover:text-[#f2f3ed] text-[13px] no-underline transition-colors">Dashboard</Link>
+          <Link href="/admin" className="text-[#94a39a] hover:text-[#f2f3ed] text-[13px] no-underline transition-colors">Admin</Link>
         </nav>
         <div className="hidden md:flex font-mono text-[12px] text-[#94a39a] border border-[#26312b] px-3 py-2 rounded-full items-center gap-2">
           <i className="w-[7px] h-[7px] rounded-full bg-[#c5f36b] shadow-[0_0_10px_#c5f36b]" /> 

@@ -77,6 +77,27 @@ app.get('/api/plan/:planId', async (req, res) => {
   }
 })
 
+// Admin global stats
+app.get('/api/admin/stats', async (req, res) => {
+  try {
+    const [totalPlansRes, activePlansRes, totalSavedRes, totalFeesRes] = await Promise.all([
+      get(`SELECT COUNT(*) as count FROM plans`),
+      get(`SELECT COUNT(*) as count FROM plans WHERE status = 'Active'`),
+      get(`SELECT SUM(amount_saved) as total FROM plans WHERE status = 'Active'`),
+      get(`SELECT SUM(fees_paid) as total FROM plans`)
+    ])
+
+    res.json({
+      totalPlans: totalPlansRes.count || 0,
+      activePlans: activePlansRes.count || 0,
+      totalSaved: totalSavedRes.total || 0,
+      totalFees: totalFeesRes.total || 0
+    })
+  } catch (error: any) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
 // Sync status
 app.get('/api/status', async (req, res) => {
   try {
