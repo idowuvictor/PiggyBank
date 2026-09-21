@@ -56,7 +56,7 @@ async function processEvent(log: EventLog) {
   if (eventName === 'PlanCreated') {
     const [planId, owner, tokenArg, title, goal, cadence, roundAmount, lastRoundAmount, totalRounds] = args
     const interval = cadence === 0n ? 86400 : cadence === 1n ? 604800 : 2592000
-    const token = '0xF2837cD516f35686cBfD91B8A523abE6216DdE52' // Hardcoding USDC for now
+    const token = '0xB7542a0ecDCBFEb1995921058A0F49A0B7A3FEA3' // Hardcoding USDC for now
     
     // Check if exists
     const existing = await get(`SELECT plan_id FROM plans WHERE plan_id = ?`, [planId.toString()])

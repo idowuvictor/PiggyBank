@@ -84,7 +84,7 @@ export async function initDb() {
   const state = await get(`SELECT last_synced_block FROM sync_state WHERE id = 1`)
   if (!state) {
     // Electroneum Testnet piggybank deployment block
-    await run(`INSERT INTO sync_state (id, last_synced_block) VALUES (1, 15323800)`)
+    await run(`INSERT INTO sync_state (id, last_synced_block) VALUES (1, 15356368)`)
   }
 
   console.log('Database initialized at', dbPath)
