@@ -23,13 +23,17 @@ export function Dashboard() {
 
   const selectedPlan = plans.find(p => p.id === selectedPlanId) || null
 
-  const handleCreateSuccess = () => {
+  const handleCreateSuccess = async () => {
     setShowCreate(false)
+    setStatus('Syncing with indexer...')
+    await new Promise(resolve => setTimeout(resolve, 4000))
     refresh()
   }
 
-  const handleEmergencySuccess = () => {
+  const handleEmergencySuccess = async () => {
     setShowEmergency(false)
+    setStatus('Syncing with indexer...')
+    await new Promise(resolve => setTimeout(resolve, 4000))
     refresh()
   }
 
@@ -56,6 +60,8 @@ export function Dashboard() {
       const piggy = new Contract(PIGGYBANK_ADDRESS, piggyAbi, signer)
       const tx = await piggy.deduct(Number(selectedPlan.id))
       await tx.wait()
+      setStatus('Syncing with indexer...')
+      await new Promise(resolve => setTimeout(resolve, 4000))
       await refresh()
       setStatus('Payment successful.')
     } catch (err: any) {
@@ -78,6 +84,8 @@ export function Dashboard() {
       const piggy = new Contract(PIGGYBANK_ADDRESS, piggyAbi, signer)
       const tx = await piggy.claimCompletion(Number(selectedPlan.id))
       await tx.wait()
+      setStatus('Syncing with indexer...')
+      await new Promise(resolve => setTimeout(resolve, 4000))
       await refresh()
       setStatus('Claim successful!')
     } catch (err: any) {
