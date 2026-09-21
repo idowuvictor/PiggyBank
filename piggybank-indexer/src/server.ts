@@ -84,9 +84,9 @@ app.get('/api/admin/stats', async (req, res) => {
     const [totalPlansRes, activePlansRes, totalSavedRes, totalFeesRes, totalTargetRes, uniqueUsersRes, recentPlans] = await Promise.all([
       get(`SELECT COUNT(*) as count FROM plans`),
       get(`SELECT COUNT(*) as count FROM plans WHERE status = 'Active'`),
-      get(`SELECT SUM(amount_saved) as total FROM plans WHERE status = 'Active'`),
-      get(`SELECT SUM(fees_paid) as total FROM plans`),
-      get(`SELECT SUM(goal) as total FROM plans`),
+      get(`SELECT SUM(CAST(amount_saved AS NUMERIC)) as total FROM plans WHERE status = 'Active'`),
+      get(`SELECT SUM(CAST(fees_paid AS NUMERIC)) as total FROM plans`),
+      get(`SELECT SUM(CAST(goal AS NUMERIC)) as total FROM plans`),
       get(`SELECT COUNT(DISTINCT owner) as count FROM plans`),
       all(`SELECT * FROM plans ORDER BY created_at_time DESC LIMIT 20`)
     ])
