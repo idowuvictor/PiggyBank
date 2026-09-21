@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { BrowserProvider, Contract } from 'ethers'
 import { AlertOctagon, X, AlertTriangle } from 'lucide-react'
 import { PIGGYBANK_ADDRESS, piggyAbi } from '../../lib/contracts'
+import { parseTxError } from '../../lib/utils'
 import { Plan } from '../../hooks/usePiggyBank'
 
 type Props = {
@@ -39,7 +40,7 @@ export function EmergencyWithdrawDialog({ plan, onClose, onSuccess }: Props) {
       await tx.wait()
       onSuccess()
     } catch (err: any) {
-      setError(err?.message || 'Transaction failed')
+      setError(parseTxError(err))
     } finally {
       setBusy(false)
     }

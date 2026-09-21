@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { BrowserProvider, Contract, formatUnits } from 'ethers'
 import { CHAIN_ID, EXPLORER_URL, PIGGYBANK_ADDRESS, piggyAbi, RPC_URL, USDC_ADDRESS, tokenAbi } from '../lib/contracts'
+import { parseTxError } from '../lib/utils'
 
 export type AdminStats = {
   totalPlans: number
@@ -204,7 +205,7 @@ export function useAdmin() {
       await loadAdminData(provider, account)
     } catch (error: any) {
       console.error(error)
-      setStatus(error.reason || error.message || 'Transaction failed')
+      setStatus(parseTxError(error))
     } finally {
       setBusy(false)
     }
@@ -224,7 +225,7 @@ export function useAdmin() {
       await loadAdminData(provider, account)
     } catch (error: any) {
       console.error(error)
-      setStatus(error.reason || error.message || 'Transaction failed')
+      setStatus(parseTxError(error))
     } finally {
       setBusy(false)
     }
@@ -244,7 +245,7 @@ export function useAdmin() {
       await loadAdminData(provider, account)
     } catch (error: any) {
       console.error(error)
-      setStatus(error.reason || error.message || 'Transaction failed')
+      setStatus(parseTxError(error))
     } finally {
       setBusy(false)
     }

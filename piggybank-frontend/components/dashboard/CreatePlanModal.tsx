@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import { BrowserProvider, Contract, parseUnits } from 'ethers'
 import { ArrowRight, Info, AlertTriangle, X } from 'lucide-react'
 import { PIGGYBANK_ADDRESS, USDC_ADDRESS, piggyAbi, tokenAbi } from '../../lib/contracts'
+import { parseTxError } from '../../lib/utils'
 
 type Props = {
   onClose: () => void
@@ -71,7 +72,7 @@ export function CreatePlanModal({ onClose, onSuccess, decimals }: Props) {
 
       onSuccess()
     } catch (err: any) {
-      setError(err?.message || 'Transaction failed')
+      setError(parseTxError(err))
     } finally {
       setBusy(false)
     }

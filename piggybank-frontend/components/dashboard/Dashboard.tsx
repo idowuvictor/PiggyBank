@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Plus, ChevronDown } from 'lucide-react'
+import { Plus, ChevronDown, ExternalLink, CheckCircle, Clock, AlertTriangle, Battery, LogOut, ArrowRight, Wallet, ShieldAlert } from 'lucide-react'
+import { parseTxError } from '../../lib/utils'
 import { DashboardLayout } from './DashboardLayout'
 import { PlanList } from './PlanList'
 import { PlanDetails } from './PlanDetails'
@@ -48,7 +49,7 @@ export function Dashboard() {
       await refresh()
       setStatus('Payment successful.')
     } catch (err: any) {
-      setStatus(err?.message || 'Transaction failed')
+      setStatus(parseTxError(err))
     } finally {
       setBusy(false)
     }
@@ -70,7 +71,7 @@ export function Dashboard() {
       await refresh()
       setStatus('Claim successful!')
     } catch (err: any) {
-      setStatus(err?.message || 'Transaction failed')
+      setStatus(parseTxError(err))
     } finally {
       setBusy(false)
     }
