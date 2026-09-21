@@ -33,6 +33,8 @@ export function usePiggyBank() {
 
   useEffect(() => {
     if (canUseWallet) {
+      if (localStorage.getItem('piggybank_disconnected') === 'true') return
+      
       // Check if already connected
       window.ethereum.request({ method: 'eth_accounts' }).then(async (accounts: string[]) => {
         if (accounts.length > 0) {
@@ -86,6 +88,8 @@ export function usePiggyBank() {
     }
     setBusy(true)
     try {
+      localStorage.removeItem('piggybank_disconnected')
+      
       let provider = new BrowserProvider(window.ethereum)
       await provider.send('eth_requestAccounts', [])
       const network = await provider.getNetwork()
@@ -127,6 +131,15 @@ export function usePiggyBank() {
       setBusy(false)
     }
   }
+  function disconnect() {
+    localStorage.setItem('piggybank_disconnected', 'true')
+    setAccount('')
+    setBalances({ USDC: '0.00', ETN: '0.00' })
+    setPlans([])
+    setStatus('Wallet disconnected.')
+    window.location.reload()
+  }
+
 
   async function loadWalletData(provider: BrowserProvider, address: string) {
     try {
@@ -214,6 +227,7 @@ export function usePiggyBank() {
     connect,
     refresh,
     mintTestTokens,
+    disconnect,
     canUseWallet
   }
 }

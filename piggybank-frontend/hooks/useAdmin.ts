@@ -34,6 +34,9 @@ export function useAdmin() {
 
   useEffect(() => {
     if (canUseWallet) {
+      if (localStorage.getItem('piggybank_disconnected') === 'true') return
+
+      // Check if already connected
       window.ethereum.request({ method: 'eth_accounts' }).then(async (accounts: string[]) => {
         if (accounts.length > 0) {
           try {
@@ -150,6 +153,8 @@ export function useAdmin() {
     }
     setBusy(true)
     try {
+      localStorage.removeItem('piggybank_disconnected')
+
       let provider = new BrowserProvider(window.ethereum)
       await provider.send('eth_requestAccounts', [])
       const network = await provider.getNetwork()
