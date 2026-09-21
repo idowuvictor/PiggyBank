@@ -118,7 +118,14 @@ export function CreatePlanModal({ onClose, onSuccess, decimals }: Props) {
                 className="w-full bg-[#0d1210] border border-[#26312b] rounded-lg px-4 py-3 text-[#c5f36b] focus:border-[#c5f36b] focus:outline-none transition-colors appearance-none font-bold"
               >
                 {SUPPORTED_TOKENS.map(t => (
-                  <option key={t.symbol} value={t.address}>{t.symbol}</option>
+                  <option 
+                    key={t.symbol} 
+                    value={t.address}
+                    disabled={t.symbol !== 'USDC'}
+                    title={t.symbol !== 'USDC' ? 'Not supported at the moment' : undefined}
+                  >
+                    {t.symbol} {t.symbol !== 'USDC' ? '(Soon)' : ''}
+                  </option>
                 ))}
               </select>
             </div>
