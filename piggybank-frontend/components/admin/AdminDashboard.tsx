@@ -18,9 +18,13 @@ export default function AdminDashboard() {
         <ShieldCheck className="w-16 h-16 text-[#c5f36b] mb-4" />
         <h2 className="text-2xl font-bold text-white mb-2">Admin Dashboard</h2>
         <p className="text-[#94a39a] mb-6 max-w-md">Connect your wallet to access the PiggyBank protocol administration interface. You must be the contract owner.</p>
-        <button
-          onClick={connect}
-          disabled={busy}
+          <button 
+            onClick={() => {
+              if (window.confirm('Do you want to connect your wallet?')) {
+                connect()
+              }
+            }} 
+            disabled={busy}
           className="bg-[#c5f36b] text-[#0b0e0d] px-6 py-3 rounded-full font-semibold hover:bg-[#b0d95f] transition-all disabled:opacity-50"
         >
           {busy ? 'Connecting...' : 'Connect Wallet'}

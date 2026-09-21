@@ -10,7 +10,7 @@ import HeroVideoBackground from '../HeroVideoBackground'
 const HAND_VIDEO_URL = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260511_230229_7c9bc431-46cf-489a-948d-e8144d8eb5d4.mp4'
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
-  const { account, connect, canUseWallet, mintTestTokens, busy } = usePiggyBank()
+  const { account, connect, disconnect, canUseWallet, mintTestTokens, busy } = usePiggyBank()
 
   const shorten = (str: string) => `${str.slice(0, 6)}...${str.slice(-4)}`
 
@@ -46,7 +46,17 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
             </button>
           )}
           <button 
-            onClick={connect} 
+            onClick={() => {
+              if (account) {
+                if (window.confirm('Are you sure you want to disconnect your wallet?')) {
+                  disconnect()
+                }
+              } else {
+                if (window.confirm('Do you want to connect your wallet?')) {
+                  connect()
+                }
+              }
+            }} 
             className="bg-[#c5f36b] text-[#111810] px-4 py-2.5 rounded-full font-bold inline-flex gap-2 items-center hover:bg-[#d8ff8a] transition-colors"
           >
             <Wallet size={15} />
