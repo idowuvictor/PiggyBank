@@ -9,6 +9,9 @@ export type AdminStats = {
   activePlans: number
   totalSaved: string
   totalFees: string
+  totalTargetGoals: string
+  totalUsers: number
+  recentPlans: any[] // We can type this better, but any[] is fine for now
 }
 
 export type ContractConfig = {

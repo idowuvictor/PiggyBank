@@ -53,32 +53,78 @@ export default function AdminDashboard() {
       </div>
 
       {stats && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-[#121614] rounded-2xl p-6 border border-white/5">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[#94a39a] text-sm">Total TVL (USDC)</span>
-              <Activity className="w-5 h-5 text-[#c5f36b]" />
+        <div className="space-y-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-[#121614] rounded-2xl p-6 border border-white/5">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[#94a39a] text-sm">Total TVL (USDC)</span>
+                <Activity className="w-5 h-5 text-[#c5f36b]" />
+              </div>
+              <div className="text-2xl font-bold text-white">
+                ${Number(formatUnits(stats.totalSaved, 6)).toLocaleString()}
+              </div>
             </div>
-            <div className="text-2xl font-bold text-white">
-              ${Number(formatUnits(stats.totalSaved, 6)).toLocaleString()}
+            <div className="bg-[#121614] rounded-2xl p-6 border border-white/5">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[#94a39a] text-sm">Target Goals</span>
+                <Activity className="w-5 h-5 text-[#c5f36b]" />
+              </div>
+              <div className="text-2xl font-bold text-white">
+                ${Number(formatUnits(stats.totalTargetGoals || '0', 6)).toLocaleString()}
+              </div>
+            </div>
+            <div className="bg-[#121614] rounded-2xl p-6 border border-white/5">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[#94a39a] text-sm">Active Plans</span>
+                <Activity className="w-5 h-5 text-[#c5f36b]" />
+              </div>
+              <div className="text-2xl font-bold text-white">
+                {stats.activePlans} <span className="text-sm text-[#94a39a] font-normal">/ {stats.totalPlans} total</span>
+              </div>
+            </div>
+            <div className="bg-[#121614] rounded-2xl p-6 border border-white/5">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[#94a39a] text-sm">Total Users</span>
+                <Activity className="w-5 h-5 text-[#c5f36b]" />
+              </div>
+              <div className="text-2xl font-bold text-white">
+                {stats.totalUsers}
+              </div>
             </div>
           </div>
+
           <div className="bg-[#121614] rounded-2xl p-6 border border-white/5">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[#94a39a] text-sm">Active Plans</span>
-              <Activity className="w-5 h-5 text-[#c5f36b]" />
-            </div>
-            <div className="text-2xl font-bold text-white">
-              {stats.activePlans} <span className="text-sm text-[#94a39a] font-normal">/ {stats.totalPlans} total</span>
-            </div>
-          </div>
-          <div className="bg-[#121614] rounded-2xl p-6 border border-white/5">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[#94a39a] text-sm">Total Fees Collected</span>
-              <Activity className="w-5 h-5 text-[#c5f36b]" />
-            </div>
-            <div className="text-2xl font-bold text-white">
-              ${Number(formatUnits(stats.totalFees, 6)).toLocaleString()}
+            <h2 className="text-lg font-bold text-white mb-6">Recent Plan Activity</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="text-[#94a39a] border-b border-white/5">
+                    <th className="pb-3 font-normal">User</th>
+                    <th className="pb-3 font-normal">Goal</th>
+                    <th className="pb-3 font-normal">Saved</th>
+                    <th className="pb-3 font-normal text-right">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5 text-white">
+                  {stats.recentPlans && stats.recentPlans.map((plan: any) => (
+                    <tr key={plan.id}>
+                      <td className="py-4 font-mono">{plan.owner.slice(0,6)}...{plan.owner.slice(-4)}</td>
+                      <td className="py-4">${Number(formatUnits(plan.goal, 6)).toLocaleString()}</td>
+                      <td className="py-4">${Number(formatUnits(plan.amountSaved, 6)).toLocaleString()}</td>
+                      <td className="py-4 text-right">
+                        <span className={`px-2 py-1 rounded-full text-xs ${plan.completed ? 'bg-green-500/20 text-green-400' : plan.active ? 'bg-[#c5f36b]/20 text-[#c5f36b]' : 'bg-red-500/20 text-red-400'}`}>
+                          {plan.completed ? 'Completed' : plan.active ? 'Active' : 'Exited'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                  {(!stats.recentPlans || stats.recentPlans.length === 0) && (
+                    <tr>
+                      <td colSpan={4} className="py-8 text-center text-[#94a39a]">No recent activity found.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
