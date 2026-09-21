@@ -51,6 +51,7 @@ export async function initDb() {
       plan_id TEXT PRIMARY KEY,
       owner TEXT NOT NULL,
       token TEXT NOT NULL,
+      title TEXT NOT NULL,
       goal TEXT NOT NULL,
       interval INTEGER NOT NULL,
       total_rounds INTEGER NOT NULL,

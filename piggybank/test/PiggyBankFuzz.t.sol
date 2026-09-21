@@ -114,7 +114,7 @@ contract PiggyBankFuzzTest is Test {
         token.mint(user, approval + 1e6); // a bit extra for safety
         vm.startPrank(user);
         token.approve(address(piggyBank), approval);
-        uint256 planId = piggyBank.createPlan(address(token), goal, PiggyBank.Cadence.Daily);
+        uint256 planId = piggyBank.createPlan(address(token), goal, PiggyBank.Cadence.Daily, "Fuzz Plan");
         vm.stopPrank();
 
         uint256 userBalanceBefore = token.balanceOf(user);

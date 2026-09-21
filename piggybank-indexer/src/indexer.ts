@@ -54,7 +54,7 @@ async function processEvent(log: EventLog) {
   const { eventName, args, transactionHash, blockNumber } = log
   
   if (eventName === 'PlanCreated') {
-    const [planId, owner, goal, cadence, roundAmount, totalRounds] = args
+    const [planId, owner, tokenArg, title, goal, cadence, roundAmount, lastRoundAmount, totalRounds] = args
     const interval = cadence === 0n ? 86400 : cadence === 1n ? 604800 : 2592000
     const token = '0xF2837cD516f35686cBfD91B8A523abE6216DdE52' // Hardcoding USDC for now
     
@@ -63,12 +63,13 @@ async function processEvent(log: EventLog) {
     if (!existing) {
       const block = await log.getBlock()
       await run(`
-        INSERT INTO plans (plan_id, owner, token, goal, interval, total_rounds, round_amount, created_at_block, created_at_time)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO plans (plan_id, owner, token, title, goal, interval, total_rounds, round_amount, created_at_block, created_at_time)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `, [
         planId.toString(),
         owner.toLowerCase(),
         token,
+        title,
         goal.toString(),
         interval,
         Number(totalRounds),

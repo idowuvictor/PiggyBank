@@ -27,7 +27,7 @@ contract CreateWeeklyPlan is Script {
         console.log("Approved PiggyBank to spend MockUSDC");
 
         // Create the plan
-        uint256 planId = piggyBank.createPlan(address(mockUSDC), goal, PiggyBank.Cadence.Weekly);
+        uint256 planId = piggyBank.createPlan(address(mockUSDC), goal, PiggyBank.Cadence.Weekly, "My Weekly Goal");
         console.log("Created Weekly PiggyBank Savings Plan! Plan ID:", planId);
 
         vm.stopBroadcast();

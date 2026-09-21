@@ -22,6 +22,7 @@ const formatPlan = (row: any) => {
   return {
     id: row.plan_id,
     owner: row.owner,
+    title: row.title,
     goal: row.goal,
     totalRounds: row.total_rounds,
     roundAmount: row.round_amount,

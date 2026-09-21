@@ -100,6 +100,7 @@ export default function AdminDashboard() {
                 <thead>
                   <tr className="text-[#94a39a] border-b border-white/5">
                     <th className="pb-3 font-normal">User</th>
+                    <th className="pb-3 font-normal">Title</th>
                     <th className="pb-3 font-normal">Goal</th>
                     <th className="pb-3 font-normal">Saved</th>
                     <th className="pb-3 font-normal text-right">Status</th>
@@ -109,6 +110,7 @@ export default function AdminDashboard() {
                   {stats.recentPlans && stats.recentPlans.map((plan: any) => (
                     <tr key={plan.id}>
                       <td className="py-4 font-mono">{plan.owner.slice(0,6)}...{plan.owner.slice(-4)}</td>
+                      <td className="py-4">{plan.title || `Plan #${plan.id}`}</td>
                       <td className="py-4">${Number(formatUnits(plan.goal, 6)).toLocaleString()}</td>
                       <td className="py-4">${Number(formatUnits(plan.amountSaved, 6)).toLocaleString()}</td>
                       <td className="py-4 text-right">

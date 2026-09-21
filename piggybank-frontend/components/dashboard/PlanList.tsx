@@ -49,7 +49,7 @@ export function PlanList({ plans, selectedId, onSelect, onRefresh, busy, account
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-center mb-1">
-                    <strong className="text-[#f2f3ed] truncate">Plan #{plan.id}</strong>
+                    <strong className="text-[#f2f3ed] truncate">{plan.title || `Plan #${plan.id}`}</strong>
                     <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full flex items-center gap-1.5 ${
                       plan.active ? 'text-[#c5f36b] bg-[#c5f36b]/10' : 
                       plan.completed ? 'text-[#9fffd0] bg-[#9fffd0]/10' : 

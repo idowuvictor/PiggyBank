@@ -90,7 +90,7 @@ export function PlanDetails({ plan, busy, onDeduct, onClaim, onEmergencyWithdraw
       <div className="flex justify-between items-start mb-6">
         <div>
           <span className="text-[11px] font-mono tracking-widest text-[#94a39a]">PLAN MONITOR</span>
-          <h2 className="text-2xl font-bold text-[#f2f3ed] mt-1">Plan #{plan.id}</h2>
+          <h2 className="text-2xl font-bold text-[#f2f3ed] mt-1">{plan.title || `Plan #${plan.id}`}</h2>
         </div>
         <a href={`${EXPLORER_URL}/address/${PIGGYBANK_ADDRESS}`} target="_blank" rel="noreferrer" className="text-[#94a39a] hover:text-[#c5f36b] transition-colors p-2">
           <ExternalLink size={18} />

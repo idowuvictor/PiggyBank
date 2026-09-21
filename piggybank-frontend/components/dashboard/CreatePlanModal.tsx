@@ -19,6 +19,7 @@ const SUPPORTED_TOKENS = [
 
 export function CreatePlanModal({ onClose, onSuccess, decimals }: Props) {
   const [tokenAddress, setTokenAddress] = useState(USDC_ADDRESS)
+  const [title, setTitle] = useState('')
   const [goal, setGoal] = useState('100')
   const [cadence, setCadence] = useState('0')
   const [busy, setBusy] = useState(false)
@@ -44,6 +45,10 @@ export function CreatePlanModal({ onClose, onSuccess, decimals }: Props) {
   async function handleSubmit() {
     if (!ackLocked || !ackCompound || !ackAudit) return
     if (!window.ethereum) return
+    if (!title.trim()) {
+      setError('Please enter a goal title.')
+      return
+    }
     
     setBusy(true)
     setError('')
@@ -61,7 +66,7 @@ export function CreatePlanModal({ onClose, onSuccess, decimals }: Props) {
       await approveTx.wait()
 
       // 2. Create Plan
-      const tx = await piggy.createPlan(tokenAddress, rawGoal, Number(cadence))
+      const tx = await piggy.createPlan(tokenAddress, rawGoal, Number(cadence), title)
       await tx.wait()
 
       onSuccess()
@@ -85,6 +90,16 @@ export function CreatePlanModal({ onClose, onSuccess, decimals }: Props) {
         <h2 className="text-3xl font-bold mb-6 text-[#f2f3ed]">Build your buffer</h2>
 
         <div className="space-y-5">
+          <div>
+            <label className="block text-[12px] text-[#94a39a] mb-2">Goal Title</label>
+            <input 
+              type="text" 
+              value={title} 
+              onChange={e => setTitle(e.target.value)}
+              placeholder="e.g. New Laptop, Vacation..."
+              className="w-full bg-[#0d1210] border border-[#26312b] rounded-lg px-4 py-3 text-[#f2f3ed] focus:border-[#c5f36b] focus:outline-none transition-colors"
+            />
+          </div>
           <div className="grid grid-cols-[1fr_120px] gap-3">
             <div>
               <label className="block text-[12px] text-[#94a39a] mb-2">Goal Amount</label>

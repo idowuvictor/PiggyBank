@@ -65,7 +65,7 @@ contract PiggyBankTest is Test {
         uint256 approval = goal + goal / 100;
         vm.startPrank(user);
         usdc.approve(address(piggyBank), approval);
-        planId = piggyBank.createPlan(address(usdc), goal, cadence);
+        planId = piggyBank.createPlan(address(usdc), goal, cadence, "Test Plan");
         vm.stopPrank();
     }
 
@@ -93,7 +93,7 @@ contract PiggyBankTest is Test {
         address fakeToken = address(0xDEAD);
         vm.startPrank(alice);
         vm.expectRevert(abi.encodeWithSelector(TokenNotAccepted.selector, fakeToken));
-        piggyBank.createPlan(fakeToken, 100e6, PiggyBank.Cadence.Daily);
+        piggyBank.createPlan(fakeToken, 100e6, PiggyBank.Cadence.Daily, "Test Plan");
         vm.stopPrank();
     }
 
@@ -101,7 +101,7 @@ contract PiggyBankTest is Test {
         vm.startPrank(alice);
         usdc.approve(address(piggyBank), 1e6);
         vm.expectRevert(GoalMustBeGreaterThanZero.selector);
-        piggyBank.createPlan(address(usdc), 0, PiggyBank.Cadence.Daily);
+        piggyBank.createPlan(address(usdc), 0, PiggyBank.Cadence.Daily, "Test Plan");
         vm.stopPrank();
     }
 
@@ -111,7 +111,7 @@ contract PiggyBankTest is Test {
         vm.startPrank(alice);
         usdc.approve(address(piggyBank), required - 1);
         vm.expectRevert(abi.encodeWithSelector(InsufficientApproval.selector, required, required - 1));
-        piggyBank.createPlan(address(usdc), goal, PiggyBank.Cadence.Daily);
+        piggyBank.createPlan(address(usdc), goal, PiggyBank.Cadence.Daily, "Test Plan");
         vm.stopPrank();
     }
 
@@ -126,7 +126,7 @@ contract PiggyBankTest is Test {
         uint256 planId0 = _createPlan(alice, 300e6, PiggyBank.Cadence.Daily);
         vm.startPrank(alice);
         usdc.approve(address(piggyBank), 1200e6 + 1200e6 / 100);
-        uint256 planId1 = piggyBank.createPlan(address(usdc), 1200e6, PiggyBank.Cadence.Weekly);
+        uint256 planId1 = piggyBank.createPlan(address(usdc), 1200e6, PiggyBank.Cadence.Weekly, "Test Plan");
         vm.stopPrank();
 
         assertEq(planId0, 0);

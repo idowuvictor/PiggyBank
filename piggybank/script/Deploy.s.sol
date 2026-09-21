@@ -44,7 +44,7 @@ contract Deploy is Script {
         console.log("Approved PiggyBank to spend MockUSDC");
 
         // Create the plan
-        uint256 planId = piggyBank.createPlan(address(mockUSDC), goal, PiggyBank.Cadence.Daily);
+        uint256 planId = piggyBank.createPlan(address(mockUSDC), goal, PiggyBank.Cadence.Daily, "My First Goal");
         console.log("Created Daily PiggyBank Savings Plan! Plan ID:", planId);
 
         vm.stopBroadcast();

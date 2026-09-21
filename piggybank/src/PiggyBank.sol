@@ -138,6 +138,7 @@ contract PiggyBank is ReentrancyGuard, Ownable {
         uint256 indexed planId,
         address indexed owner,
         address indexed token,
+        string title,
         uint256 goal,
         Cadence cadence,
         uint256 roundAmount,
@@ -226,7 +227,8 @@ contract PiggyBank is ReentrancyGuard, Ownable {
     function createPlan(
         address token,
         uint256 goal,
-        Cadence cadence
+        Cadence cadence,
+        string calldata title
     ) external returns (uint256 planId) {
         if (!acceptedTokens[token]) revert TokenNotAccepted(token);
         if (goal == 0) revert GoalMustBeGreaterThanZero();
@@ -252,6 +254,7 @@ contract PiggyBank is ReentrancyGuard, Ownable {
             planId,
             msg.sender,
             token,
+            title,
             goal,
             cadence,
             p.roundAmount,
