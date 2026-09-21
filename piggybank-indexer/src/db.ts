@@ -35,7 +35,7 @@ export async function run(sql: string, params: any[] = []): Promise<void> {
     await pgPool!.query(convertSql(sql), params)
   } else {
     return new Promise((resolve, reject) => {
-      sqliteDb!.run(sql, params, (err) => {
+      sqliteDb!.run(sql, params, (err: any) => {
         if (err) reject(err)
         else resolve()
       })
@@ -49,7 +49,7 @@ export async function get(sql: string, params: any[] = []): Promise<any> {
     return res.rows[0] || null
   } else {
     return new Promise((resolve, reject) => {
-      sqliteDb!.get(sql, params, (err, row) => {
+      sqliteDb!.get(sql, params, (err: any, row: any) => {
         if (err) reject(err)
         else resolve(row)
       })
@@ -63,7 +63,7 @@ export async function all(sql: string, params: any[] = []): Promise<any[]> {
     return res.rows
   } else {
     return new Promise((resolve, reject) => {
-      sqliteDb!.all(sql, params, (err, rows) => {
+      sqliteDb!.all(sql, params, (err: any, rows: any[]) => {
         if (err) reject(err)
         else resolve(rows)
       })
