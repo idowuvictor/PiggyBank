@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { useAdmin } from '../../hooks/useAdmin'
 import { Activity, Settings, Save, AlertTriangle, ShieldCheck, Wallet } from 'lucide-react'
-import { formatUnits } from 'ethers'
+
 
 export default function AdminDashboard() {
   const { account, stats, config, status, busy, connect, updateDefaultEmergencyFeeBps, updateKeeperIncentiveBps, updateTreasuryAddress } = useAdmin()
@@ -61,7 +61,7 @@ export default function AdminDashboard() {
                 <Activity className="w-5 h-5 text-[#c5f36b]" />
               </div>
               <div className="text-2xl font-bold text-white">
-                ${Number(formatUnits(stats.totalSaved, 6)).toLocaleString()}
+                ${Number(stats.totalSaved).toLocaleString()}
               </div>
             </div>
             <div className="bg-[#121614] rounded-2xl p-6 border border-white/5">
@@ -70,7 +70,7 @@ export default function AdminDashboard() {
                 <Activity className="w-5 h-5 text-[#c5f36b]" />
               </div>
               <div className="text-2xl font-bold text-white">
-                ${Number(formatUnits(stats.totalTargetGoals || '0', 6)).toLocaleString()}
+                ${Number(stats.totalTargetGoals || '0').toLocaleString()}
               </div>
             </div>
             <div className="bg-[#121614] rounded-2xl p-6 border border-white/5">
@@ -111,8 +111,8 @@ export default function AdminDashboard() {
                     <tr key={plan.id}>
                       <td className="py-4 font-mono">{plan.owner.slice(0,6)}...{plan.owner.slice(-4)}</td>
                       <td className="py-4">{plan.title || `Plan #${plan.id}`}</td>
-                      <td className="py-4">${Number(formatUnits(plan.goal, 6)).toLocaleString()}</td>
-                      <td className="py-4">${Number(formatUnits(plan.amountSaved, 6)).toLocaleString()}</td>
+                      <td className="py-4">${Number(plan.goal).toLocaleString()}</td>
+                      <td className="py-4">${Number(plan.amountSaved).toLocaleString()}</td>
                       <td className="py-4 text-right">
                         <span className={`px-2 py-1 rounded-full text-xs ${plan.completed ? 'bg-green-500/20 text-green-400' : plan.active ? 'bg-[#c5f36b]/20 text-[#c5f36b]' : 'bg-red-500/20 text-red-400'}`}>
                           {plan.completed ? 'Completed' : plan.active ? 'Active' : 'Exited'}
